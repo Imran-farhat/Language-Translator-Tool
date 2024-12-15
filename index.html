@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Translation Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #007BFF;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Language Translation Tool</h1>
+        <form id="translationForm">
+            <textarea id="inputText" placeholder="Enter text to translate..."></textarea>
+            <select id="targetLang">
+                <option value="" disabled selected>Select Target Language</option>
+                <option value="af">Afrikaans</option>
+                <option value="ar">Arabic</option>
+                <option value="bn">Bengali</option>
+                <option value="zh-cn">Chinese (Simplified)</option>
+                <option value="zh-tw">Chinese (Traditional)</option>
+                <option value="cs">Czech</option>
+                <option value="da">Danish</option>
+                <option value="nl">Dutch</option>
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="hi">Hindi</option>
+                <option value="it">Italian</option>
+                <option value="ja">Japanese</option>
+                <option value="ko">Korean</option>
+                <option value="ms">Malay</option>
+                <option value="pl">Polish</option>
+                <option value="pt">Portuguese</option>
+                <option value="ru">Russian</option>
+                <option value="es">Spanish</option>
+                <option value="sv">Swedish</option>
+                <option value="ta">Tamil</option>
+                <option value="te">Telugu</option>
+                <option value="th">Thai</option>
+                <option value="tr">Turkish</option>
+                <option value="ur">Urdu</option>
+                <option value="vi">Vietnamese</option>
+            </select>
+            <button type="submit">Translate</button>
+        </form>
+        <div class="result" id="translationResult"></div>
+    </div>
+
+    <script>
+        document.getElementById('translationForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const text = document.getElementById('inputText').value;
+            const targetLang = document.getElementById('targetLang').value;
+
+            if (!text || !targetLang) {
+                alert("Please provide text and select a target language.");
+                return;
+            }
+
+            try {
+                const response = await fetch('/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, targetLang })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    document.getElementById('translationResult').innerText = data.translation;
+                } else {
+                    document.getElementById('translationResult').innerText = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                document.getElementById('translationResult').innerText = 'Error: Unable to translate.';
+            }
+        });
+    </script>
+</body>
+</html>
